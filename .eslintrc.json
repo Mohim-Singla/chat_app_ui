@@ -1,0 +1,61 @@
+{
+  "extends": ["next/core-web-vitals", "eslint:recommended", "plugin:react/recommended"],
+  "plugins": ["react", "react-hooks", "jsx-a11y"],
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "rules": {
+    // General Best Practices
+    "eqeqeq": "error",
+    "no-console": "warn",
+    "curly": "error",
+    "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+    "consistent-return": "error",
+
+    // React-Specific Rules
+    "react/prop-types": "off", // Disable if using TypeScript or PropTypes isn"t relevant
+    "react/jsx-uses-react": "error",
+    "react/jsx-uses-vars": "error",
+    "react/react-in-jsx-scope": "off", // Not needed with Next.js
+    "react/no-unescaped-entities": "warn",
+    "react-hooks/rules-of-hooks": "error", // Ensure hooks are used correctly
+    "react-hooks/exhaustive-deps": "warn", // Warn about missing dependencies in useEffect
+
+    // Accessibility
+    "jsx-a11y/alt-text": "warn",
+    "jsx-a11y/anchor-is-valid": [
+      "warn",
+      {
+        "aspects": ["invalidHref", "preferButton"]
+      }
+    ],
+    "jsx-a11y/label-has-associated-control": "error",
+
+    // Formatting & Style
+    "indent": ["error", 2],
+    "eol-last": ["error", "always"],
+    "quotes": ["error", "single"],
+    "semi": ["error", "always"],
+    "comma-dangle": ["error", {
+      "arrays": "always-multiline",
+      "objects": "always-multiline",
+      "imports": "always-multiline",
+      "exports": "always-multiline",
+      "functions": "never"
+    }]
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  }
+}
