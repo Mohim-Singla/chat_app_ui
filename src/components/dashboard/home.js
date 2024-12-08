@@ -1,9 +1,9 @@
+import SidePanel from "./sidePanel/sidePanel";
+
 function Home() {
   return (
-    <div>
-      Welcome user.
-    </div>
-  )
-}
+    <SidePanel />
+  );
+};
 
 export default Home;

@@ -21,7 +21,7 @@ function App() {
   }, [user]);
 
   return (
-    <div>
+    <>
       <Routes>
         <Route path='/login' element={<Login setUser={setUser} />} />
         <Route path='/signup' element={<Signup />} />
@@ -34,7 +34,7 @@ function App() {
           } 
         />
       </Routes>
-    </div>
+    </>
   );
 }
 
