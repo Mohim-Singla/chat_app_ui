@@ -1,48 +1,47 @@
 import { Button, TextField, Typography, Link, Box, Container } from "@mui/material";
 import { useState } from "react";
 import { serviceConfig } from "../../config/config";
-import { useNavigate } from "react-router-dom";
 
+function Signup() {
+  const [name, setName] = useState("");
+  const [signupEmail, setsignupEmail] = useState("");
+  const [signupPassword, setsignupPassword] = useState("");
+  const [signupCodeMessage, setSignupCodeMessage] = useState();
 
-function Login({ setUser }) {
-  const [loginEmail, setLoginEmail] = useState("");
-  const [loginPassword, setLoginPassword] = useState("");
-  const [loginCodeMessage, setLoginCodeMessage] = useState();
-  const navigate = useNavigate();
-
-  const loginUser = async (creds) => {
-    const fetchResponse = await fetch(`${serviceConfig.AUTH_SERVER.HOST}${serviceConfig.AUTH_SERVER.ENDPOINTS.LOGIN}`, {
+  const signupUser = async (data) => {
+    const fetchResponse = await fetch(`${serviceConfig.AUTH_SERVER.HOST}${serviceConfig.AUTH_SERVER.ENDPOINTS.SIGNUP}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        email: creds.loginEmail,
-        password: creds.loginPassword,
+        name: data.name,
+        email: data.signupEmail,
+        password: data.signupPassword,
       }),
     });
 
     return fetchResponse.json();
   };
 
-  const handleLogin = async (e) => {
+  const handleSignup = async (e) => {
     try {
-      setLoginCodeMessage();
+      setSignupCodeMessage();
       e.preventDefault();
-      const fetchResponse = await loginUser({
-        loginEmail,
-        loginPassword
+      const fetchResponse = await signupUser({
+        name,
+        signupEmail,
+        signupPassword
       });
       if (fetchResponse) {
-        if (fetchResponse.statusCode === 200) {
-          setUser(fetchResponse.response);
-          navigate('/home');
+        if (fetchResponse.statusCode === 201) {
+
         } else {
           throw new Error(fetchResponse.message ?? 'Something went wrong!');
         }
       } else {
-        throw new Error('Login Failed.');
+        throw new Error('User signup Failed.');
       }
     } catch (error) {
-      setLoginCodeMessage(error.message);
+      setSignupCodeMessage(error.message);
     }
   };
 
@@ -53,7 +52,7 @@ function Login({ setUser }) {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        height: "100vh",
+        height: "100vh", // Full height of the window
       }}
     >
       <Box
@@ -73,16 +72,25 @@ function Login({ setUser }) {
         }}
       >
         <Typography variant="h4" component="h1" gutterBottom>
-          Chat App Login
+          Chat App signup
         </Typography>
+
+        <TextField
+          id="name"
+          label="User's Name"
+          variant="outlined"
+          fullWidth
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+        />
 
         <TextField
           id="email"
           label="Email Address"
           variant="outlined"
           fullWidth
-          value={loginEmail}
-          onChange={(event) => setLoginEmail(event.target.value)}
+          value={signupEmail}
+          onChange={(event) => setsignupEmail(event.target.value)}
         />
 
         <TextField
@@ -91,8 +99,8 @@ function Login({ setUser }) {
           variant="outlined"
           type="password"
           fullWidth
-          value={loginPassword}
-          onChange={(event) => setLoginPassword(event.target.value)}
+          value={signupPassword}
+          onChange={(event) => setsignupPassword(event.target.value)}
         />
 
         <Button 
@@ -101,12 +109,12 @@ function Login({ setUser }) {
           size="large" 
           fullWidth 
           sx={{ mt: 2 }}
-          onClick={handleLogin}
+          onClick={handleSignup}
         >
-          Login
+          sign up
         </Button>
 
-        <p style={{ color: "red" }}>{loginCodeMessage}</p>
+        <p style={{ color: "red" }}>{signupCodeMessage}</p>
 
         <Typography variant="body2" color="text.secondary">
           Forgot Password?{" "}
@@ -116,15 +124,16 @@ function Login({ setUser }) {
         </Typography>
         
         <Typography variant="body2" color="text.secondary">
-          New to Chat App?{" "}
-          <Link href="/signup" underline="hover">
-            Sign up
+          Already have an account?{" "}
+          <Link href="/login" underline="hover">
+            Login
           </Link>
+          {" "}Instead
         </Typography>
 
         <Typography variant="body2" color="text.secondary">
           Continue as{" "}
-          <Link href="/guest-login" underline="hover">
+          <Link href="/guest-signup" underline="hover">
             Guest
           </Link>
         </Typography>
@@ -133,4 +142,4 @@ function Login({ setUser }) {
   );
 }
 
-export default Login;
+export default Signup;
