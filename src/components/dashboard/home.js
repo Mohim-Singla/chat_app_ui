@@ -1,10 +1,12 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // Use this if using React Router
+import { useNavigate } from "react-router-dom";
 import SidePanel from "./sidePanel/sidePanel";
 import { serviceConfig } from "../../config/config";
+import { useSnackbar } from "notistack";
 
 function Home() {
-  const navigate = useNavigate(); // For navigation
+  const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,19 +26,21 @@ function Home() {
         );
 
         if (response.status !== 200) {
+          enqueueSnackbar('Session expired!')
           localStorage.clear();
           navigate("/login");
           return;
         }
       } catch (error) {
         console.error("Error fetching data:", error);
+        enqueueSnackbar('Something went wrong!')
         localStorage.clear();
         navigate("/login");
       }
     };
 
     fetchData();
-  }, [navigate]);
+  }, [navigate, enqueueSnackbar]);
 
   return <SidePanel />;
 }

@@ -1,10 +1,11 @@
 import './App.css';
 import { Route, Routes } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { SnackbarProvider } from "notistack";
 import Login from './components/auth/login';
 import Signup from './components/auth/signup';
 import Home from './components/dashboard/home';
-import ProtectedRoute from './components/auth/protectedRoutes'; // Import ProtectedRoute
+import ProtectedRoute from './components/auth/protectedRoutes';
 
 function App() {
   const [user, setUser] = useState(() => {
@@ -21,7 +22,13 @@ function App() {
   }, [user]);
 
   return (
-    <>
+    <SnackbarProvider
+      maxSnack={3}
+      anchorOrigin={{
+        vertical: "bottom",
+        horizontal: "right",
+      }}
+    >
       <Routes>
         <Route path='/login' element={<Login setUser={setUser} />} />
         <Route path='/signup' element={<Signup />} />
@@ -34,7 +41,7 @@ function App() {
           } 
         />
       </Routes>
-    </>
+    </SnackbarProvider>
   );
 }
 
