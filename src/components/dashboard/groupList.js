@@ -3,19 +3,32 @@ import { useSnackbar } from "notistack";
 import { serviceConfig } from "../../config/config";
 import { Divider } from "@mui/material";
 
-function PublicGroups({ onGroupClick }) {
+function GroupList({ groupType, onGroupClick }) {
   const { enqueueSnackbar } = useSnackbar();
-  const [publicGroups, setPublicGroups] = useState([]);
-  const [hoveredGroup, setHoveredGroup] = useState([]);
+  const [groups, setGroups] = useState([]);
+  const [hoveredGroup, setHoveredGroup] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchPublicGroups = async () => {
+    const fetchGroups = async () => {
       try {
         const user = localStorage.getItem("user");
         const token = user ? JSON.parse(user).token : null;
+
+        let endpoint;
+        switch (groupType) {
+          case "public":
+            endpoint = serviceConfig.CHAT_SERVER.ENDPOINTS.FETCH_PUBLIC_GROUPS;
+            break;
+          case "private":
+            endpoint = serviceConfig.CHAT_SERVER.ENDPOINTS.FETCH_PRIVATE_GROUPS;
+            break;
+          default:
+            throw new Error("Invalid group type!");
+        }
+        
         const response = await fetch(
-          `${serviceConfig.CHAT_SERVER.HOST}${serviceConfig.CHAT_SERVER.ENDPOINTS.FETCH_PUBLIC_GROUPS}`,
+          `${serviceConfig.CHAT_SERVER.HOST}${endpoint}`,
           {
             method: "GET",
             headers: {
@@ -27,37 +40,39 @@ function PublicGroups({ onGroupClick }) {
 
         if (response.ok) {
           const data = await response.json();
-          setPublicGroups(data.response);
+          setGroups(data.response);
         } else {
-          enqueueSnackbar("Failed to fetch public groups!", { variant: "error" });
+          enqueueSnackbar(`Failed to fetch ${groupType} groups!`, {
+            variant: "error",
+          });
         }
       } catch (error) {
-        console.error("Error fetching public groups:", error);
+        console.error(`Error fetching ${groupType} groups:`, error);
         enqueueSnackbar("Something went wrong!", { variant: "error" });
       } finally {
         setLoading(false);
       }
     };
 
-    fetchPublicGroups();
-  }, [enqueueSnackbar]);
+    fetchGroups();
+  }, [groupType, enqueueSnackbar]);
 
   if (loading) {
-    return <p>Loading public groups...</p>;
+    return <p>Loading {groupType} groups...</p>;
   }
 
-  if (publicGroups?.length === 0) {
-    return <p>No public groups available.</p>;
+  if (groups?.length === 0) {
+    return <p>No {groupType} groups available.</p>;
   }
 
   return (
     <div>
-      <h2>Public Groups</h2>
+      <h2>{groupType === "public" ? "Public Groups" : "Private Groups"}</h2>
 
-      <Divider sx={{ backgroundColor: 'white', marginBottom: '20px' }} />
+      <Divider sx={{ backgroundColor: "white", marginBottom: "20px" }} />
 
       <ul style={{ listStyle: "none", padding: 0 }}>
-        {publicGroups?.map((group) => (
+        {groups.map((group) => (
           <li
             key={group.groupId}
             style={{
@@ -65,12 +80,11 @@ function PublicGroups({ onGroupClick }) {
               marginBottom: "10px",
               borderRadius: "5px",
               cursor: "pointer",
-              backgroundColor: hoveredGroup === group.groupId ? "#f0f0f0" : "transparent",
+              backgroundColor:
+                hoveredGroup === group.groupId ? "#f0f0f0" : "transparent",
               transition: "background-color 0.3s",
             }}
-            onMouseEnter={() => {
-              setHoveredGroup(group.groupId)
-            }}
+            onMouseEnter={() => setHoveredGroup(group.groupId)}
             onMouseLeave={() => setHoveredGroup(null)}
             onClick={() => onGroupClick(group.groupId)}
           >
@@ -82,4 +96,4 @@ function PublicGroups({ onGroupClick }) {
   );
 }
 
-export default PublicGroups;
+export default GroupList;
