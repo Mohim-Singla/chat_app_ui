@@ -2,11 +2,11 @@ import React from 'react';
 import { CssBaseline, Divider, Drawer } from "@mui/material";
 import SidePanelList from './sidePanelList';
 
-function SidePanel() {
+function SidePanel({ onItemClick }) {
   const items = [
-    { displayValue: 'Public Groups' },
-    { displayValue: 'Private Groups' },
-    { displayValue: '1:1 Chat' },
+    { displayValue: 'Public Groups', value: 'public_groups' },
+    { displayValue: 'Private Groups', value: 'private_groups' },
+    { displayValue: '1:1 Chat', value: 'one_to_one_chat' },
   ];
 
   return (
@@ -42,10 +42,10 @@ function SidePanel() {
 
         <Divider sx={{ backgroundColor: 'white', marginBottom: '20px' }} />
 
-        <SidePanelList items={items} />
+        <SidePanelList items={items} onItemClick={onItemClick} />
       </Drawer>
     </div>
   );
-};
+}
 
 export default SidePanel;
