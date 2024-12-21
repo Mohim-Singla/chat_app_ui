@@ -9,6 +9,9 @@ function Home() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const [selectedItem, setSelectedItem] = useState("welcome");
+  const user = localStorage.getItem("user");
+  const token = user ? JSON.parse(user).token : null;
+  const userName = (user ? JSON.parse(user).name : null) ?? 'user';
 
   const onGroupClick = (groupId) => {
     console.log("Group clicked:", groupId);
@@ -16,9 +19,6 @@ function Home() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const user = localStorage.getItem("user");
-      const token = user ? JSON.parse(user).token : null;
-
       try {
         const response = await fetch(
           `${serviceConfig.AUTH_SERVER.HOST}${serviceConfig.AUTH_SERVER.ENDPOINTS.VALIDATE_TOKEN}`,
@@ -45,11 +45,11 @@ function Home() {
     };
 
     fetchData();
-  }, [navigate, enqueueSnackbar]);
+  }, [navigate, enqueueSnackbar, token]);
 
   // Mapping of components to `selectedItem`
   const componentsMap = {
-    welcome: <h1>Welcome, User!</h1>,
+    welcome: <h1>Welcome, {userName}!</h1>,
     public_groups: <GroupList groupType="public" onGroupClick={onGroupClick} />,
     private_groups: <GroupList groupType="private" onGroupClick={onGroupClick} />,
     one_to_one_chat: <h1>Private 1 to 1 chats feature will be available soon.</h1>,
