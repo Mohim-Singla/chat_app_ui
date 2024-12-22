@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import SidePanel from "./sidePanel/sidePanel";
 import { serviceConfig } from "../../config/config";
 import { useSnackbar } from "notistack";
-import GroupList from "./groupList"; // Importing the reusable GroupList component
+import GroupList from "./groupList";
 
 function Home() {
   const navigate = useNavigate();
@@ -47,7 +47,6 @@ function Home() {
     fetchData();
   }, [navigate, enqueueSnackbar, token]);
 
-  // Mapping of components to `selectedItem`
   const componentsMap = {
     welcome: <h1>Welcome, {userName}!</h1>,
     public_groups: <GroupList groupType="public" onGroupClick={onGroupClick} />,

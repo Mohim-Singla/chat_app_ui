@@ -8,7 +8,7 @@ const SidePanelList = ({ items, onItemClick }) => {
         <ListItem 
           button 
           key={index} 
-          onClick={() => onItemClick(item.value)} // Pass value to the parent
+          onClick={() => onItemClick(item.value)}
         >
           <ListItemText 
             primaryTypographyProps={{ style: { fontWeight: 'bold' } }} 

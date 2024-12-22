@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useSnackbar } from "notistack";
+import { useNavigate } from "react-router-dom";
 import { serviceConfig } from "../../config/config";
 import { Divider } from "@mui/material";
 
-function GroupList({ groupType, onGroupClick }) {
+function GroupList({ groupType }) {
   const { enqueueSnackbar } = useSnackbar();
   const [groups, setGroups] = useState([]);
   const [hoveredGroup, setHoveredGroup] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchGroups = async () => {
@@ -57,11 +59,15 @@ function GroupList({ groupType, onGroupClick }) {
     fetchGroups();
   }, [groupType, enqueueSnackbar]);
 
+  const handleGroupClick = (groupId) => {
+    navigate(`/group/${groupId}`);
+  };
+
   if (loading) {
     return <p>Loading {groupType} groups...</p>;
   }
 
-  if (groups?.length === 0) {
+  if (groups.length === 0) {
     return <p>No {groupType} groups available.</p>;
   }
 
@@ -86,7 +92,7 @@ function GroupList({ groupType, onGroupClick }) {
             }}
             onMouseEnter={() => setHoveredGroup(group.groupId)}
             onMouseLeave={() => setHoveredGroup(null)}
-            onClick={() => onGroupClick(group.groupId)}
+            onClick={() => handleGroupClick(group.groupId)}
           >
             {group.title}
           </li>

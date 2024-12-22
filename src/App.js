@@ -6,6 +6,7 @@ import Login from './components/auth/login';
 import Signup from './components/auth/signup';
 import Home from './components/dashboard/home';
 import ProtectedRoute from './components/auth/protectedRoutes';
+import GroupMessages from './components/messages/groupMessages';
 
 function App() {
   const [user, setUser] = useState(() => {
@@ -39,6 +40,14 @@ function App() {
               <Home />
             </ProtectedRoute>
           } 
+        />
+        <Route
+          path="/group/:groupId"
+          element={
+            <ProtectedRoute user={user}>
+              <GroupMessages />
+            </ProtectedRoute>
+          }
         />
       </Routes>
     </SnackbarProvider>
